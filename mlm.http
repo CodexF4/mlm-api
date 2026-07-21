@@ -1,0 +1,29 @@
+@mlm_HostAddress = http://localhost:5211
+
+### Register a user (root member — no sponsor)
+POST {{mlm_HostAddress}}/register
+Content-Type: application/json
+
+{
+  "firstName": "Juan",
+  "lastName": "Dela Cruz",
+  "email": "juan@example.com",
+  "username": "juandc",
+  "password": "secret123",
+  "sponsorId": null
+}
+
+### Log in (returns { token, expiresAt, user })
+POST {{mlm_HostAddress}}/login
+Content-Type: application/json
+
+{
+  "usernameOrEmail": "juandc",
+  "password": "secret123"
+}
+
+### Current user (requires bearer token from /login)
+GET {{mlm_HostAddress}}/me
+Authorization: Bearer PASTE_TOKEN_HERE
+
+###
