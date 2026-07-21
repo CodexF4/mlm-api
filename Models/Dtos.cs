@@ -1,17 +1,19 @@
 namespace mlm.Models;
 
-/// <summary>Payload for self-registration.</summary>
+/// <summary>Payload for self-registration. An optional referral code links to a sponsor.</summary>
 public record RegisterRequest(
     string FirstName,
     string LastName,
     string Email,
     string Username,
     string Password,
-    Guid? SponsorId,
     string? ReferralCode);
 
 /// <summary>Payload for logging in with username or email.</summary>
 public record LoginRequest(string UsernameOrEmail, string Password);
+
+/// <summary>Payload for Google sign-in: the Google ID token + optional referral code (new users).</summary>
+public record GoogleLoginRequest(string IdToken, string? ReferralCode);
 
 /// <summary>Safe user projection returned to clients (no password hash / security fields).</summary>
 public record UserDto(

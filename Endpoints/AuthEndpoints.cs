@@ -20,8 +20,8 @@ public static class AuthEndpoints
                 return Results.BadRequest("First name, last name, email and username are required.");
             }
 
-            // Resolve the sponsor: a referral code takes precedence over a raw sponsor id.
-            Guid? sponsorId = request.SponsorId;
+            // Resolve the sponsor from the referral code (optional — the first member has none).
+            Guid? sponsorId = null;
             if (!string.IsNullOrWhiteSpace(request.ReferralCode))
             {
                 var sponsor = await users.Users
@@ -32,11 +32,6 @@ public static class AuthEndpoints
                 }
 
                 sponsorId = sponsor.Id;
-            }
-            else if (request.SponsorId is Guid rawSponsorId &&
-                     await users.FindByIdAsync(rawSponsorId.ToString()) is null)
-            {
-                return Results.BadRequest("Sponsor not found.");
             }
 
             // Generate a unique referral code for the new member.
@@ -86,15 +81,7 @@ public static class AuthEndpoints
 
             var roles = await users.GetRolesAsync(user);
             var (token, expiresAt) = tokens.CreateToken(user, roles);
-
-            response.Cookies.Append(AuthCookie.Name, token, new CookieOptions
-            {
-                HttpOnly = true,
-                Secure = response.HttpContext.Request.IsHttps,
-                SameSite = SameSiteMode.Lax,
-                Path = "/",
-                Expires = expiresAt
-            });
+            AuthCookie.Append(response, token, expiresAt);
 
             return Results.Ok(user.ToDto());
         })

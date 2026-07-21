@@ -128,6 +128,7 @@ app.MapGet("/health", () => Results.Ok(new { status = "healthy" }))
     .WithTags("Health");
 
 app.MapAuthEndpoints();
+app.MapExternalAuthEndpoints();
 app.MapReferralEndpoints();
 
 app.Run();

@@ -26,6 +26,7 @@ Render PostgreSQL instance. The Angular UI (Netlify) reaches it through a same-o
 | `Jwt__Key` | a strong random secret (≥ 32 bytes) — generate a fresh one |
 | `Jwt__Issuer` | `mlm-api` (optional; already in appsettings) |
 | `Jwt__Audience` | `mlm-ui` (optional; already in appsettings) |
+| `Authentication__Google__ClientId` | Google Web Client ID (optional override; already in appsettings — see Google sign-in below) |
 
 `PORT` is injected by Render automatically — the app reads it and binds to
 `0.0.0.0:$PORT`. Do **not** set `ASPNETCORE_URLS`.
@@ -44,6 +45,21 @@ Push to the connected branch. On boot the app:
 
 Note the public service URL (e.g. `https://mlm-api.onrender.com`) — you'll point the
 Netlify `/api` proxy at it (see the UI repo's `DEPLOY.md`).
+
+## Google sign-in
+The API verifies Google ID tokens on `POST /auth/google`; the audience it checks is
+`Authentication:Google:ClientId`.
+
+- The current Web Client ID is already set in `appsettings.json`
+  (`565975617810-…apps.googleusercontent.com`) and is **not secret** — it's fine in the
+  repo. Override per-environment with the env var `Authentication__Google__ClientId` if
+  needed.
+- It **must be the same** Client ID the UI uses (`mlm-ui/src/app/auth/google.config.ts`).
+- In the [Google Cloud console](https://console.cloud.google.com/apis/credentials) for
+  this OAuth client, add your public site to **Authorized JavaScript origins**:
+  - `http://localhost:4200` (local dev)
+  - your Netlify site URL (e.g. `https://<site>.netlify.app`) — and any custom domain.
+  No redirect URIs are needed (the app uses the Google Identity Services ID-token flow).
 
 ## Notes
 - **Cold starts:** free web services sleep after ~15 min idle; the first request then

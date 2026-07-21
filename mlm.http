@@ -10,7 +10,7 @@ Content-Type: application/json
   "email": "juan@example.com",
   "username": "juandc",
   "password": "secret123",
-  "sponsorId": null
+  "referralCode": null
 }
 
 ### Log in (returns { token, expiresAt, user })
