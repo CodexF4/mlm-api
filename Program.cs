@@ -84,7 +84,7 @@ builder.Services.AddAuthorization();
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-    options.KnownNetworks.Clear();
+    options.KnownIPNetworks.Clear();
     options.KnownProxies.Clear();
 });
 
@@ -146,7 +146,6 @@ static string BuildNpgsqlConnectionString(string databaseUrl)
         Username = Uri.UnescapeDataString(userInfo[0]),
         Password = userInfo.Length > 1 ? Uri.UnescapeDataString(userInfo[1]) : string.Empty,
         Database = uri.AbsolutePath.TrimStart('/'),
-        SslMode = SslMode.Prefer,
-        TrustServerCertificate = true
+        SslMode = SslMode.Prefer
     }.ToString();
 }
