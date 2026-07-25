@@ -81,9 +81,11 @@ public static class AuthEndpoints
 
             var roles = await users.GetRolesAsync(user);
             var (token, expiresAt) = tokens.CreateToken(user, roles);
+            // Keep setting the cookie (works same-origin) and also return the token so
+            // the SPA can use bearer auth cross-origin (no proxy).
             AuthCookie.Append(response, token, expiresAt);
 
-            return Results.Ok(user.ToDto());
+            return Results.Ok(new AuthResponse(token, expiresAt, user.ToDto()));
         })
         .WithName("Login")
         .WithTags("Auth");

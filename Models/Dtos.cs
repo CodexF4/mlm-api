@@ -15,6 +15,9 @@ public record LoginRequest(string UsernameOrEmail, string Password);
 /// <summary>Payload for Google sign-in: the Google ID token + optional referral code (new users).</summary>
 public record GoogleLoginRequest(string IdToken, string? ReferralCode);
 
+/// <summary>Login response carrying the JWT (for bearer auth) plus the authenticated user.</summary>
+public record AuthResponse(string Token, DateTime ExpiresAt, UserDto User);
+
 /// <summary>Safe user projection returned to clients (no password hash / security fields).</summary>
 public record UserDto(
     Guid Id,
