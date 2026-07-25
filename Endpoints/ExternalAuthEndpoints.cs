@@ -101,7 +101,7 @@ public static class ExternalAuthEndpoints
             var (token, expiresAt) = tokens.CreateToken(user, roles);
             AuthCookie.Append(response, token, expiresAt);
 
-            return Results.Ok(user.ToDto());
+            return Results.Ok(new AuthResponse(token, expiresAt, user.ToDto()));
         })
         .WithName("GoogleLogin")
         .WithTags("Auth");
